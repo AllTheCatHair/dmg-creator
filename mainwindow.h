@@ -31,7 +31,7 @@ private slots:
 
     void on_dmgOutputChooseBtn_clicked();
 
-    void on_createDmgBtn_clicked();
+    // void on_createDmgBtn_clicked();
 
     void on_createdmgCreateBtn_clicked();
 
@@ -41,6 +41,7 @@ private:
     Ui::MainWindow *ui;
     qreal getDirSize(const QString &path);
     QString fileDialogPath;
+    QString currentWorkPath;
 
 };
 #endif // MAINWINDOW_H

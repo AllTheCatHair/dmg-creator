@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>623</width>
-    <height>564</height>
+    <height>821</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -50,6 +50,27 @@
       </item>
       <item>
        <widget class="QPushButton" name="appBackgroundChooseBtn">
+        <property name="text">
+         <string>浏览</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="iconPathLayout">
+      <item>
+       <widget class="QLabel" name="label_7">
+        <property name="text">
+         <string>图标路径</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="iconPathLineEdit"/>
+      </item>
+      <item>
+       <widget class="QPushButton" name="iconPathChooseBtn">
         <property name="text">
          <string>浏览</string>
         </property>
@@ -104,7 +125,7 @@
       <item>
        <widget class="QLineEdit" name="widthLineEdit">
         <property name="text">
-         <string>800</string>
+         <string>600</string>
         </property>
        </widget>
       </item>
@@ -119,27 +140,6 @@
        <widget class="QLineEdit" name="heightLineEdit">
         <property name="text">
          <string>400</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
-    <item>
-     <layout class="QHBoxLayout" name="iconPathLayout">
-      <item>
-       <widget class="QLabel" name="label_7">
-        <property name="text">
-         <string>图标路径</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLineEdit" name="iconPathLineEdit"/>
-      </item>
-      <item>
-       <widget class="QPushButton" name="iconPathChooseBtn">
-        <property name="text">
-         <string>浏览</string>
         </property>
        </widget>
       </item>
@@ -164,7 +164,7 @@
      </layout>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <layout class="QHBoxLayout" name="appPosLayout">
       <item>
        <widget class="QLabel" name="label_9">
         <property name="text">
@@ -173,10 +173,69 @@
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="lineEdit"/>
+       <widget class="QLabel" name="label_11">
+        <property name="text">
+         <string>X</string>
+        </property>
+       </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="lineEdit_2"/>
+       <widget class="QLineEdit" name="appPosxLineEdit"/>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_12">
+        <property name="text">
+         <string>Y</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="appPosyLineEdit"/>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="applicationShortCutPosLayout">
+      <item>
+       <widget class="QLabel" name="label_10">
+        <property name="text">
+         <string>Application快捷方式的位置</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_13">
+        <property name="text">
+         <string>X</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="applicationShortCutPosxLineEdit"/>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_14">
+        <property name="text">
+         <string>Y</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="applicationShortCutPosyLineEdit"/>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="diskNameLayout">
+      <item>
+       <widget class="QLabel" name="label_15">
+        <property name="text">
+         <string>Disk名称</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="diskNameLineEdit"/>
       </item>
      </layout>
     </item>
@@ -214,13 +273,6 @@
       <item>
        <widget class="QPushButton" name="createdmgCreateBtn">
         <property name="text">
-         <string>使用其他插件创建</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="createDmgBtn">
-        <property name="text">
          <string>创建</string>
         </property>
        </widget>
@@ -235,7 +287,7 @@
      <x>0</x>
      <y>0</y>
      <width>623</width>
-     <height>37</height>
+     <height>24</height>
     </rect>
    </property>
   </widget>

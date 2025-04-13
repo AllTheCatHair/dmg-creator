@@ -7,6 +7,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     fileDialogPath = QStandardPaths::writableLocation(QStandardPaths::DesktopLocation);
+    currentWorkPath = QDir::currentPath();
 }
 
 MainWindow::~MainWindow()
@@ -64,118 +65,113 @@ void MainWindow::on_iconPathChooseBtn_clicked()
 
 
 
-void MainWindow::on_createDmgBtn_clicked()
-{
-    //app路径
-    QString appPath = ui->appPathLineEdit->text();
-    qDebug()<<"app的路径"<<appPath;
+// void MainWindow::on_createDmgBtn_clicked()
+// {
+//     //app路径
+//     QString appPath = ui->appPathLineEdit->text();
+//     qDebug()<<"app的路径"<<appPath;
 
-    //app大小
-    qreal appSize = getDirSize(appPath)+10;
-    qDebug()<<"app总大小" <<appSize<<"mb";
+//     //app大小
+//     qreal appSize = getDirSize(appPath)+10;
+//     qDebug()<<"app总大小" <<appSize<<"mb";
 
-    //dmg路径
-    QString dmgOutputPath = ui->dmgOutputLineEdit->text();
-    qDebug()<<"dmg路径"<<dmgOutputPath;
+//     //dmg路径
+//     QString dmgOutputPath = ui->dmgOutputLineEdit->text();
+//     qDebug()<<"dmg路径"<<dmgOutputPath;
 
-    //dmg名称
-    QString dmgName = ui->dmgNameLineEdit->text();
-    qDebug() << "dmg的名称" << dmgName;
+//     //dmg名称
+//     QString dmgName = ui->dmgNameLineEdit->text();
+//     qDebug() << "dmg的名称" << dmgName;
 
-    //背景路径
-    QString backgroundPath =ui ->appBackgroundLineEdit->text();
-    qDebug() << "背景路径" <<backgroundPath;
+//     //背景路径
+//     QString backgroundPath =ui ->appBackgroundLineEdit->text();
+//     qDebug() << "背景路径" <<backgroundPath;
 
-    //宽和高
-    QString width = ui->widthLineEdit->text();
-    QString height = ui->heightLineEdit->text();
-    qDebug() << "宽"<<width<<"高"<<height;
-
-
-
-    //准备命令行参数
-    QStringList args;
-    args << "create"
-         << "-volname" << dmgName
-         << "-srcfolder" << appPath
-         << "-ov"
-         << "-format" << "UDRW"
-         << QString("%1/%2.dmg").arg(dmgOutputPath, dmgName);
+//     //宽和高
+//     QString width = ui->widthLineEdit->text();
+//     QString height = ui->heightLineEdit->text();
+//     qDebug() << "宽"<<width<<"高"<<height;
 
 
 
-    //执行命令
-    QProcess process;
-    process.start("hdiutil", args);
-    process.waitForFinished(-1);
-    qDebug() << process.readAllStandardError()+process.readAllStandardOutput();
-
-    //挂载创建的dmg
-    QString mountPoint = QString("/Volumes/%1").arg(dmgName);
-    process.start("hdiutil", {"attach", QString("%1/%2.dmg").arg(dmgOutputPath, dmgName)});
-    process.waitForFinished(-1);
-    qDebug()<<"mount位置"<<mountPoint;
-
-    //拷贝背景图片到
-    process.start("mkdir", {QString("%1/.background").arg(mountPoint)});
-    process.waitForFinished(-1);
-    process.start("cp", {backgroundPath, QString("%1/.background/background.png").arg(mountPoint)});
-    process.waitForFinished(-1);
+//     //准备命令行参数
+//     QStringList args;
+//     args << "create"
+//          << "-volname" << dmgName
+//          << "-srcfolder" << appPath
+//          << "-ov"
+//          << "-format" << "UDRW"
+//          << QString("%1/%2.dmg").arg(dmgOutputPath, dmgName);
 
 
 
-    // QString result = process.readAllStandardError()+process.readAllStandardOutput();
-    // qDebug() << result;
+//     //执行命令
+//     QProcess process;
+//     process.start("hdiutil", args);
+//     process.waitForFinished(-1);
+//     qDebug() << process.readAllStandardError()+process.readAllStandardOutput();
 
-    // 使用 AppleScript 调整窗口大小
-    // 确保输入的是有效的数字
-    bool okWidth, okHeight;
-    int widthInt = width.toInt(&okWidth);
-    int heightInt = height.toInt(&okHeight);
+//     //挂载创建的dmg
+//     QString mountPoint = QString("/Volumes/%1").arg(dmgName);
+//     process.start("hdiutil", {"attach", QString("%1/%2.dmg").arg(dmgOutputPath, dmgName)});
+//     process.waitForFinished(-1);
+//     qDebug()<<"mount位置"<<mountPoint;
 
-    // 将 QString 转换为 UTF-8 编码的字符串
-    QByteArray dmgNameUtf8 = dmgName.toUtf8();
-    QByteArray backgroundPathUtf8 = (mountPoint+"/.background/background.png").toUtf8();
-
-
-        // 构建 AppleScript 脚本，动态替换宽度和高度
-        QString appleScript = QString(R"(
-tell application "Finder"
-    open disk "%1" -- 使用你的 DMG 名称
-
-    delay 2 -- 给 Finder 一些时间加载
-
-    set bounds of window of disk "%1" to {%2, %3, %4, %5} -- 设置窗口大小
-
-
-end tell
-)").arg(QString::fromUtf8(dmgNameUtf8))
-                                  .arg(200)  // 左边距
-                                  .arg(200)  // 上边距
-                                  .arg(widthInt + 200)  // 右边距，宽度加上一些偏移
-                                  .arg(heightInt + 200);  // 下边距，高度加上一些偏移
-        // 执行 AppleScript
-        QProcess::execute("osascript", QStringList() << "-e" << appleScript);
-
-
-        // QString script = QString("osascript -e 'tell application \"Finder\" to set desktop picture to POSIX file \"%1\"'").arg(backgroundPathUtf8);
-
-        QString script = QString("osascript -e 'tell application \"Finder\" to set desktop picture to {%1, %2, %3}'")
-                             .arg(0).arg(0).arg(0);
-        QProcess::execute(script);
-
-
-    QString result = process.readAllStandardError()+process.readAllStandardOutput();
-    qDebug() << result;
-
-    QMessageBox::information(this,"输出",result);
+//     //拷贝背景图片到
+//     process.start("mkdir", {QString("%1/.background").arg(mountPoint)});
+//     process.waitForFinished(-1);
+//     process.start("cp", {backgroundPath, QString("%1/.background/background.png").arg(mountPoint)});
+//     process.waitForFinished(-1);
 
 
 
+//     // QString result = process.readAllStandardError()+process.readAllStandardOutput();
+//     // qDebug() << result;
+
+//     // 使用 AppleScript 调整窗口大小
+//     // 确保输入的是有效的数字
+//     bool okWidth, okHeight;
+//     int widthInt = width.toInt(&okWidth);
+//     int heightInt = height.toInt(&okHeight);
+
+//     // 将 QString 转换为 UTF-8 编码的字符串
+//     QByteArray dmgNameUtf8 = dmgName.toUtf8();
+//     QByteArray backgroundPathUtf8 = (mountPoint+"/.background/background.png").toUtf8();
 
 
+//         // 构建 AppleScript 脚本，动态替换宽度和高度
+//         QString appleScript = QString(R"(
+// tell application "Finder"
+//     open disk "%1" -- 使用你的 DMG 名称
 
-}
+//     delay 2 -- 给 Finder 一些时间加载
+
+//     set bounds of window of disk "%1" to {%2, %3, %4, %5} -- 设置窗口大小
+
+
+// end tell
+// )").arg(QString::fromUtf8(dmgNameUtf8))
+//                                   .arg(200)  // 左边距
+//                                   .arg(200)  // 上边距
+//                                   .arg(widthInt + 200)  // 右边距，宽度加上一些偏移
+//                                   .arg(heightInt + 200);  // 下边距，高度加上一些偏移
+//         // 执行 AppleScript
+//         QProcess::execute("osascript", QStringList() << "-e" << appleScript);
+
+
+//         // QString script = QString("osascript -e 'tell application \"Finder\" to set desktop picture to POSIX file \"%1\"'").arg(backgroundPathUtf8);
+
+//         QString script = QString("osascript -e 'tell application \"Finder\" to set desktop picture to {%1, %2, %3}'")
+//                              .arg(0).arg(0).arg(0);
+//         QProcess::execute(script);
+
+
+//     QString result = process.readAllStandardError()+process.readAllStandardOutput();
+//     qDebug() << result;
+
+//     QMessageBox::information(this,"输出",result);
+
+// }
 
 
 
@@ -235,26 +231,45 @@ void MainWindow::on_createdmgCreateBtn_clicked()
     QString iconSize = ui->iconSizeLineEdit->text();
     qDebug()<<"图标大小"<<iconSize;
 
+    QString appPosx= ui->appPosxLineEdit ->text();
+    QString appPosy = ui->appPosyLineEdit->text();
+    qDebug()<<"appPosx"<<appPosx<<"appPosy"<<appPosy;
 
+    int lastSlash = appPath.lastIndexOf('\\');
+    if (lastSlash == -1) lastSlash = appPath.lastIndexOf('/');  // 兼容 /
+    QString fileName = appPath.mid(lastSlash + 1);
+    qDebug()<<"fileName"<<fileName;
 
+    QString applicationShortCutPosx =ui->applicationShortCutPosxLineEdit->text();
+    QString applicationShortCutPosy= ui->applicationShortCutPosyLineEdit->text();
+    qDebug()<<"applicationShortCutPosx"<<applicationShortCutPosx<<"applicatoonShortCutPosy"<<applicationShortCutPosy;
+
+    QString diskName = ui->diskNameLineEdit->text();
+    qDebug()<<"disk名称"<<diskName;
+
+    dmgName.append(".dmg");
+
+    QString filePath  = currentWorkPath +"/"+dmgName;
+    qDebug()<<filePath;
+    QProcess rmProcess;
+    rmProcess.start("rm", QStringList() << "-f" << filePath);
+    rmProcess.waitForFinished();  // 等待命令执行完成
 
     QProcess process;
     qDebug()<<"process";
     QStringList arguments;
-    arguments << "--volname" << dmgName
+    arguments << "--volname" << diskName
               << "--volicon" << iconPath
               << "--background" << backgroundPath
-              << "--window-pos" << "200" << "120"
+              << "--window-pos" << "200" << "200"
               << "--window-size" << width << height
               << "--icon-size" << iconSize
-              << "--icon" << "Application.app" << "200" << "190"
-              << "--hide-extension" << "Application.app"
-              << "--app-drop-link" << "600" << "185"
-              << "Application-Installer.dmg"
+              << "--icon" << fileName << appPosx << appPosy
+              << "--hide-extension" << fileName
+              << "--app-drop-link" << applicationShortCutPosx << applicationShortCutPosy
+              << dmgName
               << appPath;
 
-    // 启动 create-dmg
-    // process.start("create-dmg", arguments);
     process.start(QDir::currentPath()+"/create-dmg",arguments);
 
     process.waitForFinished(-1);
@@ -262,8 +277,26 @@ void MainWindow::on_createdmgCreateBtn_clicked()
     QString result = process.readAllStandardError()+process.readAllStandardOutput();
     qDebug() << result;
 
-    QMessageBox::information(this,"输出",result);
 
+    QString src = filePath;
+    QString dst = dmgOutputPath+"/" +dmgName;
+
+
+    QProcess mvProcess;
+    mvProcess.start("mv", QStringList() << src << dst);
+    mvProcess.waitForFinished();
+
+    if (mvProcess.exitCode() == 0) {
+        qDebug() << "剪切成功";
+    } else {
+        qDebug() << "剪切失败:" << mvProcess.readAllStandardError();
+    }
+
+
+
+
+
+    QMessageBox::information(this,"输出",result);
 }
 
 
